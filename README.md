@@ -20,7 +20,6 @@ Edit `index.html` and replace `YOUR_GOOGLE_DRIVE_DIRECT_LINK_HERE` with the dire
 3. Copy the share link: `https://drive.google.com/file/d/FILE_ID/view`
 4. Convert to direct download: `https://drive.google.com/uc?export=download&id=FILE_ID`
 5. Paste that URL in `index.html`
-
 ## Developer
 
 Benziada Tarek Chaouki
