@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LOCAPRO — نظام إدارة تأجير السيارات</title>
+  <meta name="description" content="LOCAPRO هو نظام احترافي لإدارة وكالات تأجير السيارات. إدارة الأسطول، الزبائن، العقود، الصيانة والمصاريف في مكان واحد."/>
+  <meta property="og:title" content="LOCAPRO — نظام إدارة تأجير السيارات"/>
+  <meta property="og:description" content="برنامج احترافي لإدارة وكالة تأجير السيارات — مجاني وسهل الاستخدام"/>
+  <meta property="og:image" content="https://i.imgur.com/placeholder.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:   #1F4FE0;
+      --blue-d: #1840C0;
+      --blue-l: #EEF2FF;
+      --green:  #1AA259;
+      --green-l:#ECFDF5;
+      --ink:    #0F1523;
+      --ink-2:  #374151;
+      --mute:   #6B7280;
+      --line:   #E5E7EB;
+      --bg:     #F8F9FC;
+      --white:  #FFFFFF;
+      --r:      14px;
+      --r-lg:   24px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .nav-brand {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px; font-weight: 800;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-brand .loca { color: var(--blue); }
+    .nav-brand .pro  { color: var(--green); }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a {
+      text-decoration: none; color: var(--ink-2);
+      font-weight: 600; font-size: 15px;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-dl {
+      background: var(--blue); color: #fff;
+      padding: 9px 22px; border-radius: 999px;
+      font-weight: 700; font-size: 14px;
+      text-decoration: none; transition: background .2s, transform .15s;
+      font-family: 'Cairo', sans-serif;
+    }
+    .nav-dl:hover { background: var(--blue-d); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 5% 80px;
+      background: linear-gradient(160deg, #F0F4FF 0%, #FFFFFF 45%, #ECFDF5 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 20% 20%, rgba(31,79,224,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(26,162,89,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue-l); color: var(--blue);
+      border: 1px solid rgba(31,79,224,.2);
+      padding: 6px 16px; border-radius: 999px;
+      font-size: 13px; font-weight: 700;
+      margin-bottom: 28px;
+    }
+    .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .hero h1 .brand {
+      font-family: 'Sora', sans-serif;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(17px, 2.5vw, 22px);
+      color: var(--ink-2); max-width: 620px;
+      margin: 0 auto 44px; font-weight: 400; line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--blue), #4A78F5);
+      color: #fff; padding: 16px 36px;
+      border-radius: 999px; font-size: 17px; font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(31,79,224,.35);
+      transition: transform .2s, box-shadow .2s;
+      font-family: 'Cairo', sans-serif;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(31,79,224,.45); }
+    .btn-primary svg { flex-shrink: 0; }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--ink-2); padding: 16px 28px;
+      border-radius: 999px; font-size: 16px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid var(--line);
+      transition: border-color .2s, color .2s;
+      font-family: 'Cairo', sans-serif;
+    }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    .hero-meta {
+      margin-top: 18px; color: var(--mute); font-size: 13px;
+      display: flex; align-items: center; gap: 6px; justify-content: center;
+    }
+
+    /* ── APP WINDOW MOCKUP ── */
+    .hero-mockup {
+      margin-top: 64px; width: 100%; max-width: 920px;
+      border-radius: var(--r-lg);
+      box-shadow: 0 32px 80px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06);
+      overflow: hidden;
+      position: relative; z-index: 1;
+    }
+    .mockup-bar {
+      background: #1e2433; padding: 14px 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .mockup-title {
+      margin-right: auto; color: rgba(255,255,255,.5);
+      font-family: 'Sora', sans-serif; font-size: 13px;
+    }
+    .mockup-body {
+      background: #F5F6F8;
+      display: grid; grid-template-columns: 220px 1fr;
+      min-height: 480px;
+    }
+    .mockup-sidebar {
+      background: #fff;
+      border-left: 1px solid var(--line);
+      padding: 20px 0;
+    }
+    .mock-brand {
+      padding: 4px 20px 20px;
+      font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800;
+    }
+    .mock-brand .loca { color: var(--blue); }
+    .mock-brand .pro  { color: var(--green); }
+    .mock-nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .mock-nav-label { font-size: 10px; color: var(--mute); font-weight: 700; padding: 0 8px 6px; letter-spacing: .8px; }
+    .mock-nav-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: var(--ink-2);
+      margin-bottom: 2px;
+    }
+    .mock-nav-item.active { background: var(--blue-l); color: var(--blue); }
+    .mock-nav-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .5; }
+    .mock-content { padding: 20px 24px; }
+    .mock-topbar {
+      background: #fff; border-radius: var(--r); padding: 10px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border: 1px solid var(--line); margin-bottom: 20px;
+    }
+    .mock-search { flex: 1; height: 10px; background: var(--bg); border-radius: 4px; }
+    .mock-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .mock-stat {
+      background: #fff; border-radius: var(--r); padding: 16px;
+      border: 1px solid var(--line);
+    }
+    .mock-stat-n { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; color: var(--ink); }
+    .mock-stat-l { font-size: 11px; color: var(--mute); margin-top: 2px; }
+    .mock-stat-bar { height: 3px; border-radius: 2px; margin-top: 8px; }
+    .mock-table { background: #fff; border-radius: var(--r); border: 1px solid var(--line); overflow: hidden; }
+    .mock-th { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .mock-td-wrap { padding: 0 4px; }
+    .mock-td { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--bg); }
+    .mock-cell { height: 10px; background: var(--line); border-radius: 4px; }
+    .mock-cell.blue { background: rgba(31,79,224,.2); }
+    .mock-cell.green { background: rgba(26,162,89,.2); }
+    .mock-badge { height: 18px; width: 50px; border-radius: 999px; background: rgba(26,162,89,.2); }
+
+    /* ── STATS BAND ── */
+    .stats-band {
+      background: var(--blue);
+      padding: 48px 5%;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 32px; text-align: center;
+    }
+    .stat-item { color: #fff; }
+    .stat-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 42px; font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg,#fff,rgba(255,255,255,.7));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-lbl { font-size: 15px; margin-top: 6px; opacity: .8; font-weight: 500; }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 5%; }
+    .section-label {
+      display: inline-block;
+      background: var(--blue-l); color: var(--blue);
+      font-size: 13px; font-weight: 700; padding: 5px 14px;
+      border-radius: 999px; margin-bottom: 16px;
+      border: 1px solid rgba(31,79,224,.2);
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900; line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 18px; color: var(--mute); max-width: 560px;
+      line-height: 1.7; font-weight: 400;
+    }
+
+    /* ── FEATURES ── */
+    #features { background: var(--bg); }
+    .features-header { text-align: center; margin-bottom: 64px; }
+    .features-header .section-sub { margin: 0 auto; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .feat-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 32px;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .feat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.09); }
+    .feat-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: grid; place-items: center; margin-bottom: 20px;
+      background: var(--blue-l);
+      color: var(--blue);
+    }
+    .feat-icon.green { background: var(--green-l); color: var(--green); }
+    .feat-icon.amber { background: #FFFBEB; color: #D97706; }
+    .feat-icon.purple { background: #F5F3FF; color: #7C3AED; }
+    .feat-icon.red { background: #FFF5F5; color: #DC2626; }
+    .feat-icon.teal { background: #F0FDFA; color: #0D9488; }
+    .feat-title { font-size: 19px; font-weight: 800; margin-bottom: 10px; }
+    .feat-desc { color: var(--ink-2); font-size: 15px; line-height: 1.7; font-weight: 400; }
+
+    /* ── HOW IT WORKS ── */
+    #how { text-align: center; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 64px; position: relative; }
+    .steps::before {
+      content: '';
+      position: absolute; top: 32px; right: 12%; left: 12%; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      opacity: .25;
+    }
+    .step { text-align: center; padding: 0 20px; }
+    .step-num {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #4A78F5);
+      color: #fff; font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800;
+      display: grid; place-items: center; margin: 0 auto 20px;
+      box-shadow: 0 8px 24px rgba(31,79,224,.3);
+      position: relative; z-index: 1;
+    }
+    .step h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .step p { color: var(--mute); font-size: 15px; line-height: 1.7; font-weight: 400; }
+
+    /* ── DOWNLOAD ── */
+    #download {
+      background: linear-gradient(160deg, var(--blue) 0%, #1840C0 100%);
+      text-align: center; color: #fff; position: relative; overflow: hidden;
+    }
+    #download::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 30% 50%, rgba(255,255,255,.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 70% 30%, rgba(26,162,89,.15) 0%, transparent 60%);
+    }
+    .dl-inner { position: relative; z-index: 1; }
+    #download .section-title { color: #fff; }
+    #download .section-sub { color: rgba(255,255,255,.75); margin: 0 auto 48px; }
+    .dl-card {
+      display: inline-flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.1); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--r-lg); padding: 40px 56px;
+      min-width: 380px;
+    }
+    .dl-os {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 24px;
+    }
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #fff; color: var(--blue);
+      padding: 18px 40px; border-radius: 999px;
+      font-size: 18px; font-weight: 900; text-decoration: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,.2);
+      transition: transform .2s, box-shadow .2s;
+      font-family: 'Cairo', sans-serif;
+    }
+    .dl-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,.3); }
+    .dl-meta { margin-top: 16px; color: rgba(255,255,255,.6); font-size: 13px; }
+    .dl-badges {
+      display: flex; align-items: center; gap: 16px; margin-top: 28px; flex-wrap: wrap; justify-content: center;
+    }
+    .dl-badge {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,.7); font-size: 13px;
+    }
+    .dl-badge svg { opacity: .7; }
+
+    /* ── ABOUT DEV ── */
+    #about { background: var(--bg); }
+    .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .dev-card {
+      background: var(--white); border: 1px solid var(--line);
+      border-radius: var(--r-lg); padding: 40px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    }
+    .dev-avatar {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      color: #fff; font-size: 32px; font-weight: 900;
+      display: grid; place-items: center;
+      font-family: 'Sora', sans-serif;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(31,79,224,.25);
+    }
+    .dev-name { font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+    .dev-role { color: var(--mute); font-size: 14px; margin-bottom: 20px; font-weight: 500; }
+    .dev-bio { color: var(--ink-2); font-size: 15px; line-height: 1.8; font-weight: 400; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: rgba(255,255,255,.6);
+      padding: 40px 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .foot-brand {
+      font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800;
+    }
+    .foot-brand .loca { color: var(--blue); }
+    .foot-brand .pro  { color: var(--green); }
+    .foot-copy { font-size: 13px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stats-band { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; }
+      .steps::before { display: none; }
+      .about-inner { grid-template-columns: 1fr; }
+      .mockup-body { grid-template-columns: 1fr; }
+      .mockup-sidebar { display: none; }
+      .mock-stat-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .stats-band { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .dl-card { min-width: unset; padding: 28px 24px; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .hero-mockup { animation: float 6s ease-in-out infinite; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-badge, .hero h1, .hero-sub, .hero-actions { animation: fadeUp .7s ease both; }
+    .hero h1 { animation-delay: .1s; }
+    .hero-sub { animation-delay: .2s; }
+    .hero-actions { animation-delay: .3s; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a class="nav-brand" href="#">
+    <span class="loca">LOCA</span><span class="pro">PRO</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">المميزات</a>
+    <a href="#how">كيف يعمل؟</a>
+    <a href="#about">المطوّر</a>
+  </div>
+  <a class="nav-dl" href="#download">تحميل مجاني</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    الإصدار 1.0.0 — متاح الآن
+  </div>
+
+  <h1>
+    إدارة وكالة تأجير السيارات<br/>
+    بكل احترافية مع <span class="brand">LOCAPRO</span>
+  </h1>
+
+  <p class="hero-sub">
+    برنامج مكتبي متكامل لإدارة أسطول السيارات، الزبائن، العقود، الصيانة والمصاريف —
+    كل شيء في شاشة واحدة، بدون إنترنت، مجاناً.
+  </p>
+
+  <div class="hero-actions">
+    <a class="btn-primary" href="#download">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      تحميل مجاني
+    </a>
+    <a class="btn-ghost" href="#features">
+      اكتشف المميزات
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <p class="hero-meta">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+    </svg>
+    مجاني 100% · لا حاجة للإنترنت · يعمل على Windows
+  </p>
+
+  <!-- APP MOCKUP -->
+  <div class="hero-mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#FF5F57"></div>
+      <div class="mockup-dot" style="background:#FFBD2E"></div>
+      <div class="mockup-dot" style="background:#28CA41"></div>
+      <span class="mockup-title">LOCAPRO — لوحة التحكم</span>
+    </div>
+    <div class="mockup-body">
+      <div class="mockup-sidebar">
+        <div class="mock-brand"><span class="loca">LOCA</span><span class="pro">PRO</span></div>
+        <div class="mock-nav-section">
+          <div class="mock-nav-label">الرئيسية</div>
+          <div class="mock-nav-item active">
+            <div class="mock-nav-dot"></div> لوحة التحكم
+          </div>
+          <div class="mock-nav-item">
+            <div class="mock-nav-dot"></div> السيارات
+          </div>
+          <div class="mock-nav-item">
+            <div class="mock-nav-dot"></div> الزبائن
+          </div>
+          <div class="mock-nav-item">
+            <div class="mock-nav-dot"></div> الحجوزات
+          </div>
+        </div>
+        <div class="mock-nav-section" style="margin-top:8px">
+          <div class="mock-nav-label">الإدارة</div>
+          <div class="mock-nav-item">
+            <div class="mock-nav-dot"></div> العقود
+          </div>
+          <div class="mock-nav-item">
+            <div class="mock-nav-dot"></div> الصيانة
+          </div>
+          <div class="mock-nav-item">
+            <div class="mock-nav-dot"></div> التقارير
+          </div>
+        </div>
+      </div>
+      <div class="mock-content">
+        <div class="mock-topbar">
+          <div class="mock-search"></div>
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1F4FE0,#4A78F5)"></div>
+        </div>
+        <div class="mock-stat-row">
+          <div class="mock-stat">
+            <div class="mock-stat-n" style="color:#1F4FE0">24</div>
+            <div class="mock-stat-l">السيارات</div>
+            <div class="mock-stat-bar" style="background:#1F4FE0;width:70%"></div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-n" style="color:#1AA259">18</div>
+            <div class="mock-stat-l">نشطة</div>
+            <div class="mock-stat-bar" style="background:#1AA259;width:55%"></div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-n" style="color:#D97706">142</div>
+            <div class="mock-stat-l">الزبائن</div>
+            <div class="mock-stat-bar" style="background:#D97706;width:85%"></div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-n" style="color:#7C3AED">86k</div>
+            <div class="mock-stat-l">دج إيرادات</div>
+            <div class="mock-stat-bar" style="background:#7C3AED;width:60%"></div>
+          </div>
+        </div>
+        <div class="mock-table">
+          <div class="mock-th">
+            <div style="height:9px;background:var(--line);border-radius:3px;width:70%"></div>
+            <div style="height:9px;background:var(--line);border-radius:3px;width:60%"></div>
+            <div style="height:9px;background:var(--line);border-radius:3px;width:50%"></div>
+            <div style="height:9px;background:var(--line);border-radius:3px;width:60%"></div>
+          </div>
+          <div class="mock-td-wrap">
+            <div class="mock-td"><div class="mock-cell blue" style="width:80%"></div><div class="mock-cell" style="width:60%"></div><div class="mock-cell" style="width:50%"></div><div class="mock-badge"></div></div>
+            <div class="mock-td"><div class="mock-cell blue" style="width:65%"></div><div class="mock-cell" style="width:70%"></div><div class="mock-cell" style="width:45%"></div><div class="mock-badge" style="background:rgba(220,38,38,.15)"></div></div>
+            <div class="mock-td"><div class="mock-cell blue" style="width:75%"></div><div class="mock-cell" style="width:55%"></div><div class="mock-cell" style="width:60%"></div><div class="mock-badge"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-band">
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-lbl">مجاني وبدون اشتراك</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">8</div>
+    <div class="stat-lbl">وحدات إدارية متكاملة</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-lbl">سيارات وزبائن وعقود</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">0</div>
+    <div class="stat-lbl">حاجة للاتصال بالإنترنت</div>
+  </div>
+</div>
+
+<!-- ── FEATURES ── -->
+<section id="features">
+  <div class="features-header">
+    <span class="section-label">المميزات</span>
+    <h2 class="section-title">كل ما تحتاجه لإدارة وكالتك</h2>
+    <p class="section-sub">LOCAPRO يغطي كل جانب من جوانب إدارة وكالة تأجير السيارات في واجهة واحدة سهلة الاستخدام.</p>
+  </div>
+  <div class="features-grid">
+
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 17l2-7a4 4 0 0 1 3.7-3h10.6a4 4 0 0 1 3.7 3l2 7v3H3v-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="7.5" cy="17" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="16.5" cy="17" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">إدارة الأسطول</h3>
+      <p class="feat-desc">أضف وعدّل وتتبّع جميع سياراتك — الماركة، الموديل، اللوحة، السعر اليومي وتاريخ الشراء. شاهد الحالة الآنية لكل سيارة (متاحة / مؤجرة).</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="17" cy="10" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M3 19c.7-3 3.5-4.5 6-4.5s5.3 1.5 6 4.5M14 17c.4-1.6 2-2.5 3.5-2.5S20.7 15.4 21 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">إدارة الزبائن</h3>
+      <p class="feat-desc">سجل بيانات كل زبون كاملة — الهوية، رخصة القيادة، رقم الهاتف، العنوان وتاريخ الميلاد. ابحث وصفّح سريعاً من أي مكان.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon amber">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">إدارة الحجوزات</h3>
+      <p class="feat-desc">أنشئ حجوزات بلمسة واحدة — يحسب السعر تلقائياً حسب عدد الأيام. تتبّع الحجوزات النشطة والمنتهية مع إمكانية تسجيل الكيلومتراج.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">عقود الإيجار</h3>
+      <p class="feat-desc">اطبع عقداً قانونياً كاملاً بكل بيانات الإيجار — السيارة، الزبون، التواريخ، الأسعار والتوقيعات. جاهز للطباعة في ثوانٍ.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon red">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.77 3.77z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">تتبّع الصيانة</h3>
+      <p class="feat-desc">سجّل كل عملية صيانة لكل سيارة — نوع التدخل، التاريخ، التكلفة والورشة. لا تفوّت أي موعد صيانة مجدولة.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon teal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">تقارير ومصاريف</h3>
+      <p class="feat-desc">راجع إيراداتك، مصاريفك وربحيتك بتقارير مرئية واضحة. صدّر البيانات وخذ قرارات مبنية على أرقام حقيقية.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how">
+  <span class="section-label">كيف يعمل؟</span>
+  <h2 class="section-title">ابدأ في 3 خطوات فقط</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">١</div>
+      <h3>حمّل البرنامج</h3>
+      <p>انقر على زر التحميل وقم بتشغيل ملف الإعداد. التثبيت لا يستغرق دقيقتين ولا يحتاج أي تكوين مسبق.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">٢</div>
+      <h3>سجّل حسابك</h3>
+      <p>أنشئ حساب المدير بكلمة المرور الخاصة بك. تُحفظ كل بياناتك محلياً على جهازك بأمان تام.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">٣</div>
+      <h3>أضف أسطولك وابدأ</h3>
+      <p>أدخل سياراتك وزبائنك وابدأ بإنشاء الحجوزات فوراً. الواجهة بسيطة وبالعربية من أول يوم.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── DOWNLOAD ── -->
+<section id="download">
+  <div class="dl-inner">
+    <span class="section-label" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.2)">تحميل مجاني</span>
+    <h2 class="section-title">حمّل LOCAPRO الآن</h2>
+    <p class="section-sub">
+      مجاني بالكامل. لا اشتراك، لا بيانات سحابية، لا إنترنت مطلوب.
+      كل بياناتك تبقى على جهازك.
+    </p>
+
+    <div class="dl-card">
+      <div class="dl-os">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="8" height="8" rx="1" fill="currentColor" opacity=".8"/>
+          <rect x="13" y="3" width="8" height="8" rx="1" fill="currentColor" opacity=".8"/>
+          <rect x="3" y="13" width="8" height="8" rx="1" fill="currentColor" opacity=".8"/>
+          <rect x="13" y="13" width="8" height="8" rx="1" fill="currentColor" opacity=".8"/>
+        </svg>
+        Windows 10 / 11 — 64 bit
+      </div>
+      <!-- REPLACE THE HREF BELOW WITH YOUR GOOGLE DRIVE DIRECT DOWNLOAD LINK -->
+      <a class="dl-btn" href="YOUR_GOOGLE_DRIVE_DIRECT_LINK_HERE" id="download-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        تحميل LOCAPRO Setup
+      </a>
+      <p class="dl-meta">الإصدار 1.0.0 · حجم الملف ~76 MB</p>
+      <div class="dl-badges">
+        <div class="dl-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          آمن 100%
+        </div>
+        <div class="dl-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          مجاني كلياً
+        </div>
+        <div class="dl-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          تثبيت سريع
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;color:rgba(255,255,255,.5);font-size:13px;line-height:2">
+      <strong style="color:rgba(255,255,255,.8)">طريقة التثبيت:</strong>
+      حمّل الملف · شغّل <code style="background:rgba(255,255,255,.1);padding:2px 8px;border-radius:4px">LOCAPRO Setup 1.0.0.exe</code> ·
+      اتبع التعليمات · ابدأ الاستخدام فوراً
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT DEVELOPER ── -->
+<section id="about">
+  <div class="about-inner">
+    <div>
+      <span class="section-label">المطوّر</span>
+      <h2 class="section-title">مطوَّر بشغف واحترافية</h2>
+      <p class="section-sub" style="margin-bottom:24px">
+        LOCAPRO هو مشروع مستقل طُوِّر لحل مشكلة حقيقية تواجهها وكالات تأجير السيارات في المنطقة العربية —
+        غياب برنامج بسيط، عربي، مجاني وفعّال.
+      </p>
+      <p style="color:var(--ink-2);font-size:15px;line-height:1.8;font-weight:400">
+        البرنامج مبني بتقنية Electron + React مع قاعدة بيانات SQLite محلية.
+        يعمل بالكامل بدون إنترنت، بياناتك ملكك أنت.
+      </p>
+    </div>
+    <div class="dev-card">
+      <div class="dev-avatar">BT</div>
+      <div class="dev-name">Benziada Tarek Chaouki</div>
+      <div class="dev-role">مطوّر برمجيات · Full Stack Developer</div>
+      <p class="dev-bio">
+        مطوّر مستقل متخصص في بناء تطبيقات المكتب والويب.
+        LOCAPRO صُمِّم خصيصاً لوكالات تأجير السيارات الجزائرية والعربية،
+        بواجهة عربية كاملة وأداء سريع يعمل حتى على الأجهزة القديمة.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="foot-brand">
+    <span class="loca">LOCA</span><span class="pro">PRO</span>
+  </div>
+  <div class="foot-copy">
+    © 2025 Benziada Tarek Chaouki · جميع الحقوق محفوظة
+  </div>
+  <div style="font-size:13px">
+    صُنع بـ ❤ للوكالات الجزائرية والعربية
+  </div>
+</footer>
+
+<script>
+  // Smooth animation on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1'
+        e.target.style.transform = 'translateY(0)'
+      }
+    })
+  }, { threshold: 0.1 })
+
+  document.querySelectorAll('.feat-card, .step, .dev-card').forEach(el => {
+    el.style.opacity = '0'
+    el.style.transform = 'translateY(24px)'
+    el.style.transition = 'opacity .6s ease, transform .6s ease'
+    observer.observe(el)
+  })
+
+  // Download button click tracker
+  document.getElementById('download-btn').addEventListener('click', function(e) {
+    if (this.href.includes('YOUR_GOOGLE_DRIVE')) {
+      e.preventDefault()
+      alert('رابط التحميل غير مضبوط بعد. يرجى رفع الملف على Google Drive وتحديث الرابط.')
+    }
+  })
+</script>
+</body>
+</html>
